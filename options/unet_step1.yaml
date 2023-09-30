@@ -1,0 +1,49 @@
+global_settings:
+  exp_name: unet_step1
+  epochs: 200
+  seed: 42
+  crop_size: 512
+  colors: 3
+  step_flag: 1
+  num_workers: 8
+  resume: false
+  pretrain_path: None
+  device: mps
+
+
+network:
+  net_type: UNet
+  dim: 64
+  use_skip: True
+
+isp:
+  isp_constraint: isp.bm3d_constraint
+  isp_range: isp.bm3d_range
+  gain: 0
+
+train:
+  batch_size: 4
+  loss_type: 1*L1
+  init_lr: 0.0001
+  is_train: True
+  data_txt: None
+  train_txt: /Users/lilee/Desktop/code/autotuning/data/train_step1.txt
+  val_txt: /Users/lilee/Desktop/code/autotuning/data/val_step1.txt
+  optimizer: adam
+  weight_decay: 0.0
+  scheduler: step
+  step_size: 20
+  gamma: 0.8
+
+fabric:
+  accelerator: auto
+  devices: auto
+  strategy: auto
+  precision: 32
+  num_nodes: 1
+
+loggers:
+  log_dir: ./logs
+  save_freq: 10
+  log_freq: 10
+  

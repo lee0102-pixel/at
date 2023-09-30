@@ -1,0 +1,42 @@
+global_settings:
+  exp_name: unet_step2
+  epochs: 50
+  seed: 42
+  crop_size: 512
+  colors: 3
+  step_flag: 3
+  num_workers: 8
+  pretrain_path: '/Users/lilee/Desktop/code/autotuning/logs/unet_step1/2023-09-29-22-36-21/models/best.pth'
+  device: mps
+
+
+network:
+  net_type: UNet
+  dim: 64
+  use_skip: True
+
+isp:
+  isp_constraint: isp.bm3d_constraint
+  isp_range: isp.bm3d_range
+  gain: 0
+
+train:
+  batch_size: 4
+  loss_type: 2*L1+1*Alex
+  init_lr: 0.002
+  is_train: True
+  data_txt: None
+  train_txt: /Users/lilee/Desktop/code/autotuning/data/val_step1.txt
+  val_txt: /Users/lilee/Desktop/code/autotuning/data/val_step1.txt
+
+fabric:
+  accelerator: auto
+  devices: auto
+  strategy: auto
+  precision: 32
+  num_nodes: 1
+
+loggers:
+  log_dir: ./logs
+  log_freq: 10
+  
