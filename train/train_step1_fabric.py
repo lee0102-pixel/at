@@ -15,6 +15,7 @@ import lightning as L
 from tqdm import tqdm
 import time
 from lightning.fabric.loggers import TensorBoardLogger
+from torchmetrics.image import PeakSignalNoiseRatio
 
 
 if __name__ == '__main__':
@@ -144,7 +145,8 @@ if __name__ == '__main__':
                 x, y, params_batch, picname = data
                 
                 y_hat = model(x, params_batch)
-                psnr_tmp += tools.get_psnr(y_hat.detach().cpu().numpy(), y.detach().cpu().numpy(), peak=1.0)
+                PSNR = PeakSignalNoiseRatio(data_range=1.0)
+                psnr_tmp += PSNR(y_hat.detach().cpu(), y.detach().cpu()).item()
                 if eval_iter % args.log_every_n_steps == 0:
                     fabric.loggers[0].experiment.add_images(picname[0], torch.cat([x[0:1], y_hat[0:1], y[0:1]], dim=0), eval_iter)
         psnr_tmp /= len(val_loader)
