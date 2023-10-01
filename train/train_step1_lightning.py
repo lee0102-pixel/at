@@ -1,4 +1,8 @@
 import os
+import sys
+
+dir_name = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.join(dir_name,'..'))
 import time
 import pytorch_lightning as pl
 from argparse import ArgumentParser
