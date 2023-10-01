@@ -45,10 +45,8 @@ if __name__ == '__main__':
     model = MInterface(args, isp)
 
     logger = TensorBoardLogger(save_dir=args.tb_dir)
-    args.callbacks = load_callbacks(args)
-    args.logger = logger
 
-    trainer = Trainer(**args.opt['trainer'])
+    trainer = Trainer(logger=logger, callbacks=load_callbacks(), **args.opt['trainer'])
     if args.resume:
         trainer.fit(model, data_module, ckpt_path=args.pretrain_path)
     else:
