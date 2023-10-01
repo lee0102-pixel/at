@@ -9,6 +9,7 @@ global_settings:
   resume: false
   pretrain_path: None
   device: mps
+  dataset_name: RGB2RGB
 
 
 network:
