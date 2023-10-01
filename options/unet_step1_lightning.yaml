@@ -1,6 +1,4 @@
 global_settings:
-  exp_name: unet_step1
-  epochs: 200
   seed: 42
   step_flag: 1
   resume: false
@@ -49,14 +47,3 @@ trainer:
   strategy: auto
   precision: 32
   num_nodes: 1
-
-isp:
-  item: None
-train:
-  item: None
-network:
-  item: None
-fabric:
-  item: None
-loggers:
-  item: None

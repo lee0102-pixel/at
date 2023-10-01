@@ -47,22 +47,7 @@ def parse_opt(args):
         args.opt = load_yaml(opt_path)
         args.opt_path = opt_path
         
-        for k,v in args.opt['isp'].items():
-            setattr(args, k, v)
-            
         for k,v in args.opt['global_settings'].items():
-            setattr(args, k, v)
-            
-        for k, v in args.opt['train'].items():
-            setattr(args, k, v)
-        
-        for k, v in args.opt['network'].items():
-            setattr(args, k, v)
-            
-        for k, v in args.opt['fabric'].items():
-            setattr(args, k, v)
-            
-        for k, v in args.opt['loggers'].items():
             setattr(args, k, v)
 
         for k, v in args.opt['data'].items():
