@@ -95,31 +95,31 @@ class UNet(ParamsLayer):
         if self.step_flag <= 2:
             conv1 = self.ConvBlock1(torch.cat([x, params_layer], dim=1))
         else:
-            conv1 = self.ConvBlock1(torch.cat([x, self.params_layer.repeat(x.size(0),1,1,)], dim=1))
+            conv1 = self.ConvBlock1(torch.cat([x, self.params_layer.repeat(x.size(0),1,1,1)], dim=1))
         pool1 = self.pool1(conv1)
 
         if self.step_flag <= 2:
             conv2 = self.ConvBlock2(torch.cat([pool1, self.avg_pool1(params_layer)], dim=1))
         else:
-            conv2 = self.ConvBlock2(torch.cat([pool1, self.avg_pool1(self.params_layer.repeat(x.size(0),1,1,))], dim=1))
+            conv2 = self.ConvBlock2(torch.cat([pool1, self.avg_pool1(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
         pool2 = self.pool2(conv2)
 
         if self.step_flag <= 2:
             conv3 = self.ConvBlock3(torch.cat([pool2, self.avg_pool2(params_layer)], dim=1))
         else:
-            conv3 = self.ConvBlock3(torch.cat([pool2, self.avg_pool2(self.params_layer.repeat(x.size(0),1,1,))], dim=1))
+            conv3 = self.ConvBlock3(torch.cat([pool2, self.avg_pool2(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
         pool3 = self.pool3(conv3)
 
         if self.step_flag <= 2:
             conv4 = self.ConvBlock4(torch.cat([pool3, self.avg_pool3(params_layer)], dim=1))
         else:
-            conv4 = self.ConvBlock4(torch.cat([pool3, self.avg_pool3(self.params_layer.repeat(x.size(0),1,1,))], dim=1))
+            conv4 = self.ConvBlock4(torch.cat([pool3, self.avg_pool3(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
         pool4 = self.pool4(conv4)
 
         if self.step_flag <= 2:
             conv5 = self.ConvBlock5(torch.cat([pool4, self.avg_pool4(params_layer)], dim=1))
         else:
-            conv5 = self.ConvBlock5(torch.cat([pool4, self.avg_pool4(self.params_layer.repeat(x.size(0),1,1,))], dim=1))
+            conv5 = self.ConvBlock5(torch.cat([pool4, self.avg_pool4(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
 
         up6 = self.upv6(conv5)
         up6 = torch.cat([up6, conv4], 1)
