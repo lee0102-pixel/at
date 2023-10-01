@@ -20,7 +20,7 @@ def load_callbacks(args):
     callbacks = []
     callbacks.append(ModelSummary(max_depth=-1))
     checkpoint_callback = ModelCheckpoint(dirpath=os.path.join(args.default_root_dir, args.exp_name),
-                                          filename='{epoch}-{val_loss:.4f}',
+                                          filename='{epoch}-{psnr:.4f}',
                                           save_top_k=5,
                                           verbose=True,
                                           monitor='psnr',
