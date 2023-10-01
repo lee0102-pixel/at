@@ -38,7 +38,7 @@ if __name__ == '__main__':
     logger = TensorBoardLogger(root_dir=tb_dir)
     fabric = L.Fabric(loggers=logger,
                       accelerator=args.accelerator,
-                      devices=args.devives,
+                      devices=args.devices,
                       strategy=args.strategy,
                       precision=args.precision,
                       num_nodes=args.num_nodes)
