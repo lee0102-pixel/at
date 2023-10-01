@@ -84,7 +84,7 @@ class ParamsLayer(nn.Module):
             self.params_layer[:, i:i+1, :, :] = torch.tensor(new_value).expand(1,1,self.img_size, self.img_size)
             
         self.params_layer = torch.clamp(self.params_layer, 0, 1)
-        self.requires_grad = True
+        self.params_layer.requires_grad = True
                 
                 
 if __name__ == '__main__':
