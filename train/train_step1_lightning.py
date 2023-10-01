@@ -24,8 +24,7 @@ def load_callbacks(args):
                                           save_top_k=5,
                                           verbose=True,
                                           monitor='psnr',
-                                          mode='max',
-                                          prefix='')
+                                          mode='max')
     callbacks.append(checkpoint_callback)
     return callbacks
 
@@ -37,18 +36,20 @@ if __name__ == '__main__':
     parse_opt(args)
 
     isp = ISPParams(args)
-    isp.write_params_txt(args.log_dir)
+    os.makedirs(args.default_root_dir, exist_ok=True)
+    isp.write_params_txt(args.default_root_dir)
 
     pl.seed_everything(args.seed, workers=True)
 
     data_module = DInterface(args, isp)
+    # data_module.setup('fit')
     model = MInterface(args, isp)
 
-    logger = TensorBoardLogger(save_dir=args.log_dir, name=args.exp_name)
+    logger = TensorBoardLogger(save_dir=args.default_root_dir, name=args.exp_name)
     args.callbacks = load_callbacks(args)
     args.logger = logger
 
-    trainer = Trainer.from_argparse_args(args)
+    trainer = Trainer(**args.opt['trainer'])
     if args.resume:
         trainer.fit(model, data_module, ckpt_path=args.pretrain_path)
     else:

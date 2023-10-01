@@ -14,8 +14,8 @@ data:
   colors: 3
   num_workers: 8
   data_txt: None
-  train_txt: /Users/lilee/Desktop/code/autotuning/data/train_step1.txt
-  val_txt: /Users/lilee/Desktop/code/autotuning/data/val_step1.txt
+  train_txt: /Users/lilee/Desktop/code/at/data/train_step1.txt
+  val_txt: /Users/lilee/Desktop/code/at/data/val_step1.txt
   isp_constraint: isp.bm3d_constraint
   isp_range: isp.bm3d_range
   gain: 0

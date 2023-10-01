@@ -15,7 +15,7 @@ class DInterface(pl.LightningDataModule):
         self.dataset_name = args.dataset_name
         self.kwargs       = kwargs
         self.batch_size   = args.batch_size
-        self.load_data_module(args, isp)
+        self.load_data_module()
 
     def load_data_module(self):
         name = self.dataset_name
