@@ -19,7 +19,7 @@ from tools.utils import parse_opt
 def load_callbacks(args):
     callbacks = []
     callbacks.append(ModelSummary(max_depth=-1))
-    checkpoint_callback = ModelCheckpoint(dirpath=os.path.join(args.default_root_dir, args.exp_name),
+    checkpoint_callback = ModelCheckpoint(dirpath=args.tb_dir,
                                           filename='{epoch}-{psnr:.4f}',
                                           save_top_k=5,
                                           verbose=True,
@@ -34,9 +34,9 @@ if __name__ == '__main__':
     parser.add_argument('--opt', type=str, default='./options/unet_step1_lightning.yaml')
     args = parser.parse_args()
     parse_opt(args)
-
     isp = ISPParams(args)
     os.makedirs(args.default_root_dir, exist_ok=True)
+    os.makedirs(args.tb_dir, exist_ok=True)
     isp.write_params_txt(args.default_root_dir)
 
     pl.seed_everything(args.seed, workers=True)

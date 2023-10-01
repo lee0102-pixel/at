@@ -29,7 +29,7 @@ class MInterface(pl.LightningModule):
         x, y, params_batch, _ = batch
         y_hat = self.forward(x, params_batch)
         loss, loss_dict = self.loss_function(y_hat, y)
-        self.log_dict(loss_dict, on_step=True, on_epoch=True, prog_bar=True)
+        self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
 
         return loss
     
@@ -38,10 +38,9 @@ class MInterface(pl.LightningModule):
         y_hat = self.forward(x, params_batch)
         loss, loss_dict = self.loss_function(y_hat, y)
 
-        self.log_dict(loss_dict, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('val_loss', loss, on_step=False, on_epoch=True, prog_bar=True)
         PSNR = PeakSignalNoiseRatio(data_range=1.0)
         psnr = PSNR(y_hat.detach().cpu(), y.detach().cpu())
-        # psnr = tools.get_psnr(y_hat.detach().cpu().numpy(), y.detach().cpu().numpy(), peak=1.0)
         self.log('psnr', psnr, on_step=False, on_epoch=True, prog_bar=True)
 
         return {'val_loss': loss, 'psnr': psnr}

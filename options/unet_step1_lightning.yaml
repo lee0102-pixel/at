@@ -6,6 +6,7 @@ global_settings:
   resume: false
   pretrain_path: None
   device: mps
+  tb_dir: ./logs/tb
 
 data:
   dataset_name: RGB2RGB
