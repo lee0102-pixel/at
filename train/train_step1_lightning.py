@@ -31,7 +31,7 @@ def load_callbacks(args):
 
 if __name__ == '__main__':
     parser = ArgumentParser()
-    parser.add_argument('--opt', type=str, default='./options/unet_step1_lightning.yaml')
+    parser.add_argument('--opt', type=str, default='./options/unet_step1.yaml')
     args = parser.parse_args()
     parse_opt(args)
     isp = ISPParams(args)
