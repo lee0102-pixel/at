@@ -19,9 +19,9 @@ from tools.utils import parse_opt
 def load_callbacks(args):
     callbacks = []
     callbacks.append(ModelSummary(max_depth=-1))
-    checkpoint_callback = ModelCheckpoint(dirpath=args.tb_dir,
+    checkpoint_callback = ModelCheckpoint(dirpath=args.default_root_dir,
                                           filename='{epoch}-{psnr:.4f}',
-                                          save_top_k=5,
+                                          save_top_k=3,
                                           verbose=True,
                                           monitor='psnr',
                                           mode='max')
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     data_module = DInterface(args, isp)
     model = MInterface(args, isp)
 
-    logger = TensorBoardLogger(save_dir=args.default_root_dir, name=args.exp_name)
+    logger = TensorBoardLogger(save_dir=args.tb_dir)
     args.callbacks = load_callbacks(args)
     args.logger = logger
 
