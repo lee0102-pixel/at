@@ -1,1 +1,1 @@
-from .model_interface import MInterface
+from .step1_model_interface import MInterface

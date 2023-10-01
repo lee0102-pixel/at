@@ -64,6 +64,15 @@ def parse_opt(args):
             
         for k, v in args.opt['loggers'].items():
             setattr(args, k, v)
+
+        for k, v in args.opt['data'].items():
+            setattr(args, k, v)
+
+        for k, v in args.opt['model'].items():
+            setattr(args, k, v)
+
+        for k, v in args.opt['trainer'].items():
+            setattr(args, k, v)
     return args
 
 
@@ -74,7 +83,7 @@ def get_psnr(p0, p1, peak=255.):
 if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('--opt', type=str, default='./options/unet_step1.yaml')
+    parser.add_argument('--opt', type=str, default='./options/unet_step1_lightning.yaml')
     args = parser.parse_args()
     parse_opt(args)
     

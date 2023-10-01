@@ -10,8 +10,8 @@ import torch
 import importlib
 import torch.optim.lr_scheduler as lrs
 import pytorch_lightning as pl
-import tools
 import losses.losses as losses
+from torchmetrics.image import PeakSignalNoiseRatio
 
 class MInterface(pl.LightningModule):
     def __init__(self, args, isp, **kwargs):
@@ -39,7 +39,9 @@ class MInterface(pl.LightningModule):
         loss, loss_dict = self.loss_function(y_hat, y)
 
         self.log_dict(loss_dict, on_step=False, on_epoch=True, prog_bar=True)
-        psnr = tools.get_psnr(y_hat.detach().cpu().numpy(), y.detach().cpu().numpy(), peak=1.0)
+        PSNR = PeakSignalNoiseRatio(data_range=1.0)
+        psnr = PSNR(y_hat.detach().cpu(), y.detach().cpu())
+        # psnr = tools.get_psnr(y_hat.detach().cpu().numpy(), y.detach().cpu().numpy(), peak=1.0)
         self.log('psnr', psnr, on_step=False, on_epoch=True, prog_bar=True)
 
         return {'val_loss': loss, 'psnr': psnr}
@@ -47,7 +49,7 @@ class MInterface(pl.LightningModule):
     def test_step(self, batch, batch_idx):
         return self.validation_step(batch, batch_idx)
     
-    def on_validation_epoch_end(self) -> None:
+    def on_validation_epoch_end(self):
         self.print('')
 
     def configure_optimizers(self):
@@ -67,13 +69,13 @@ class MInterface(pl.LightningModule):
             raise Exception("Optimizer error!")
     
         if self.args.scheduler == 'step':
-            scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 
-                                                        step_size=self.args.step_size, 
-                                                        gamma=self.args.gamma)
+            scheduler = lrs.StepLR(optimizer, 
+                                   step_size=self.args.step_size, 
+                                   gamma=self.args.gamma)
         elif self.args.scheduler == 'cosine':
-            scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, 
-                                                                   T_max=self.args.T_max, 
-                                                                   eta_min=self.args.eta_min)
+            scheduler = lrs.CosineAnnealingLR(optimizer, 
+                                              T_max=self.args.T_max, 
+                                              eta_min=self.args.eta_min)
         else:
             raise Exception("Scheduler error!")
         
@@ -91,7 +93,7 @@ class MInterface(pl.LightningModule):
             raise ValueError(
                 f'Invalid Network Type or Invalid Class Name models.{net_type}.{net_type}'
             )
-        self.model = module(self.args, self.isp, **self.kwargs)
+        self.model = module(self.args, self.isp)
 
 if __name__ == '__main__':
     import os
