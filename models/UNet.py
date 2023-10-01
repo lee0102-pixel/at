@@ -85,42 +85,30 @@ class UNet(ParamsLayer):
         self.set_params_layer()
 
     def forward(self, x, params_batch=None):
-        if params_batch is not None:
+        if self.step_flag <= 2:
+            assert params_batch is not None, 'params_batch must be not None when step_flag <= 2'
             params_layer = params_batch.view(params_batch.size(0), params_batch.size(1), 1, 1)
             params_layer = params_layer.repeat(1, 1, x.size(2), x.size(3))
-        else:
-            pass
-        
-        
-        if self.step_flag <= 2:
             conv1 = self.ConvBlock1(torch.cat([x, params_layer], dim=1))
-        else:
-            conv1 = self.ConvBlock1(torch.cat([x, self.params_layer.repeat(x.size(0),1,1,1)], dim=1))
-        pool1 = self.pool1(conv1)
-
-        if self.step_flag <= 2:
+            pool1 = self.pool1(conv1)
             conv2 = self.ConvBlock2(torch.cat([pool1, self.avg_pool1(params_layer)], dim=1))
-        else:
-            conv2 = self.ConvBlock2(torch.cat([pool1, self.avg_pool1(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
-        pool2 = self.pool2(conv2)
-
-        if self.step_flag <= 2:
+            pool2 = self.pool2(conv2)
             conv3 = self.ConvBlock3(torch.cat([pool2, self.avg_pool2(params_layer)], dim=1))
-        else:
-            conv3 = self.ConvBlock3(torch.cat([pool2, self.avg_pool2(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
-        pool3 = self.pool3(conv3)
-
-        if self.step_flag <= 2:
+            pool3 = self.pool3(conv3)
             conv4 = self.ConvBlock4(torch.cat([pool3, self.avg_pool3(params_layer)], dim=1))
-        else:
-            conv4 = self.ConvBlock4(torch.cat([pool3, self.avg_pool3(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
-        pool4 = self.pool4(conv4)
-
-        if self.step_flag <= 2:
+            pool4 = self.pool4(conv4)
             conv5 = self.ConvBlock5(torch.cat([pool4, self.avg_pool4(params_layer)], dim=1))
         else:
+            conv1 = self.ConvBlock1(torch.cat([x, self.params_layer.repeat(x.size(0),1,1,1)], dim=1))
+            pool1 = self.pool1(conv1)
+            conv2 = self.ConvBlock2(torch.cat([pool1, self.avg_pool1(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
+            pool2 = self.pool2(conv2)
+            conv3 = self.ConvBlock3(torch.cat([pool2, self.avg_pool2(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
+            pool3 = self.pool3(conv3)
+            conv4 = self.ConvBlock4(torch.cat([pool3, self.avg_pool3(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
+            pool4 = self.pool4(conv4)
             conv5 = self.ConvBlock5(torch.cat([pool4, self.avg_pool4(self.params_layer.repeat(x.size(0),1,1,1))], dim=1))
-
+            
         up6 = self.upv6(conv5)
         up6 = torch.cat([up6, conv4], 1)
         conv6 = self.ConvBlock6(up6)
@@ -128,7 +116,7 @@ class UNet(ParamsLayer):
         up7 = self.upv7(conv6)
         up7 = torch.cat([up7, conv3], 1)
         conv7 = self.ConvBlock7(up7)
-
+        
         up8 = self.upv8(conv7)
         up8 = torch.cat([up8, conv2], 1)
         conv8 = self.ConvBlock8(up8)
