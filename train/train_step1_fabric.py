@@ -177,6 +177,7 @@ if __name__ == '__main__':
                                 best_psnr,
                                 time.time()-epoch_start_time,
                                 optimizer.param_groups[0]['lr']))
+            f.write('\n')
             f.write("------------------------------------------------------------------\n")
             
         checkpoint = {
