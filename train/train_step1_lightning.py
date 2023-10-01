@@ -42,7 +42,6 @@ if __name__ == '__main__':
     pl.seed_everything(args.seed, workers=True)
 
     data_module = DInterface(args, isp)
-    # data_module.setup('fit')
     model = MInterface(args, isp)
 
     logger = TensorBoardLogger(save_dir=args.default_root_dir, name=args.exp_name)
