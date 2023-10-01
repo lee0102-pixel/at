@@ -142,7 +142,7 @@ if __name__ == '__main__':
             params_list = model.get_params_list()
             model.isp.write_results(params_list, os.path.join(log_dir, 'best_params.txt'))
                 
-        info = 'Ep: {}\tLoss {:.4f}\tPSNR {:.4f}\tBest_Ep {}\tBest_PSNR {:.4f}\tTime: {:.4f}\tLR {:.6f}'
+        info = 'Ep:{} Loss:{:.6f} PSNR:{:.4f} Best_Ep:{} Best_PSNR:{:.4f} Time:{:.2f} LR:{:.6f}'
         
         fabric.print("------------------------------------------------------------------")
         fabric.print(info.format(epoch, 
