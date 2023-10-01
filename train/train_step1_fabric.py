@@ -26,16 +26,21 @@ if __name__ == '__main__':
     
     #### Logs ####
     now_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
-    log_dir = os.path.join(args.log_dir, args.exp_name, 'fabric', now_time)
+    log_dir = os.path.join(args.default_root_dir, 'fabric', now_time)
     os.makedirs(log_dir, exist_ok=True)
     logname = os.path.join(log_dir, 'log.txt')
     model_dir = os.path.join(log_dir, 'models')
     os.makedirs(model_dir, exist_ok=True)
     
-    tb_dir = os.path.join(log_dir, 'tensorboard')
+    tb_dir = args.tb_dir
     os.makedirs(tb_dir, exist_ok=True)
     logger = TensorBoardLogger(root_dir=tb_dir)
-    fabric = L.Fabric(loggers=logger, **args.opt['fabric'])
+    fabric = L.Fabric(loggers=logger,
+                      accelerator=args.accelerator,
+                      devices=args.devives,
+                      strategy=args.strategy,
+                      precision=args.precision,
+                      num_nodes=args.num_nodes)
     fabric.launch()
     
     #### set seed ####
@@ -104,12 +109,12 @@ if __name__ == '__main__':
     train_loader, val_loader = fabric.setup_dataloaders(train_loader, val_loader)
     
     #### Train&Eval ####
-    fabric.print('====>Start Epoch {} End Epoch {}'.format(start_epoch, args.epochs))
+    fabric.print('====>Start Epoch {} End Epoch {}'.format(start_epoch, args.max_epochs))
     best_psnr = 0
     best_epoch = 0
     train_iter = 0
     eval_iter = 0
-    for epoch in range(start_epoch, args.epochs):
+    for epoch in range(start_epoch, args.max_epochs):
         epoch_start_time = time.time()
         epoch_loss = 0
         model.train()
@@ -122,7 +127,7 @@ if __name__ == '__main__':
             optimizer.zero_grad()
             y_hat = model(x, params_batch)
             loss, loss_dict = criterion(y_hat, y)
-            if train_iter % args.log_freq == 0:
+            if train_iter % args.log_every_n_steps == 0:
                 fabric.log_dict(loss_dict, train_iter)
             epoch_loss += loss.item()
             fabric.backward(loss)
@@ -140,7 +145,7 @@ if __name__ == '__main__':
                 
                 y_hat = model(x, params_batch)
                 psnr_tmp += tools.get_psnr(y_hat.detach().cpu().numpy(), y.detach().cpu().numpy(), peak=1.0)
-                if eval_iter % args.log_freq == 0:
+                if eval_iter % args.log_every_n_steps == 0:
                     fabric.loggers[0].experiment.add_images(picname[0], torch.cat([x[0:1], y_hat[0:1], y[0:1]], dim=0), eval_iter)
         psnr_tmp /= len(val_loader)
         fabric.log('psnr', psnr_tmp, epoch)
@@ -187,6 +192,4 @@ if __name__ == '__main__':
                 'scheduler': scheduler.state_dict(),
             }
         fabric.save(os.path.join(model_dir, 'last.pth'), checkpoint)
-        if epoch % args.save_freq == 0:
-            fabric.save(os.path.join(model_dir, 'epoch_%d.pth' % epoch), checkpoint)
-            fabric.print('Model saved at epoch %d' % epoch)
+        
