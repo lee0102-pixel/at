@@ -104,7 +104,7 @@ if __name__ == '__main__':
     train_loader, val_loader = fabric.setup_dataloaders(train_loader, val_loader)
     
     #### Train&Eval ####
-    fabric.print('====> Start Epoch {} End Epoch {}'.format(start_epoch, args.epochs))
+    fabric.print('====>Start Epoch {} End Epoch {}'.format(start_epoch, args.epochs))
     best_psnr = 0
     best_epoch = 0
     train_iter = 0
@@ -156,7 +156,7 @@ if __name__ == '__main__':
             }
             fabric.save(os.path.join(model_dir, 'best.pth'), checkpoint)
             
-        info = 'Ep: {}\tLoss {:.4f}\tPSNR {:.4f}\tBest_Ep {}\tBest_PSNR {:.4f}\tTime: {:.4f}\tLR {:.6f}'
+        info = 'Ep:{} Loss:{:.6f} PSNR:{:.4f} Best_Ep:{} Best_PSNR:{:.4f} Time:{:.2f} LR:{:.6f}'
         print("------------------------------------------------------------------")
         print(info.format(epoch,
                           epoch_loss,
