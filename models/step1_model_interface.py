@@ -36,14 +36,15 @@ class MInterface(pl.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx):
+        # tensorboard = self.logger.experiment
         x, y, params_batch, picname = batch
         y_hat = self.forward(x, params_batch)
         loss, loss_dict = self.loss_function(y_hat, y)
-
         self.log('val_loss', loss)
         PSNR = PeakSignalNoiseRatio(data_range=1.0)
         psnr = PSNR(y_hat.detach().cpu(), y.detach().cpu())
         self.log('psnr', psnr)
+        self.logger.experiment.add_images(picname[0], torch.cat([x[0:1], y_hat[0:1], y[0:1]], dim=0), self.current_epoch)
 
         return {'val_loss': loss, 'psnr': psnr}
     
