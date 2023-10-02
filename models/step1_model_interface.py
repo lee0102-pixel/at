@@ -1,6 +1,8 @@
 import os
 import sys
 
+from torch import Tensor
+
 dir_name = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.join(dir_name,'..'))
 
@@ -93,6 +95,9 @@ class MInterface(pl.LightningModule):
                 f'Invalid Network Type or Invalid Class Name models.{net_type}.{net_type}'
             )
         self.model = module(self.args, self.isp)
+        
+    def backward(self, loss):
+        loss.backward()
 
 if __name__ == '__main__':
     import os
