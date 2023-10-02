@@ -6,9 +6,9 @@ sys.path.append(os.path.join(dir_name,'..'))
 import time
 import pytorch_lightning as pl
 from argparse import ArgumentParser
-from pytorch_lightning import Trainer
-from pytorch_lightning.loggers import TensorBoardLogger
-from lightning.pytorch.callbacks import ModelSummary, ModelCheckpoint
+from lightning.pytorch import Trainer
+from lightning.pytorch.loggers import TensorBoardLogger
+import lightning.pytorch.callbacks as plc
 
 from models import MInterface
 from dataset import DInterface
@@ -18,14 +18,13 @@ from tools.utils import parse_opt
 
 def load_callbacks(args):
     callbacks = []
-    callbacks.append(ModelSummary(max_depth=-1))
-    checkpoint_callback = ModelCheckpoint(dirpath=args.default_root_dir,
-                                          filename='{epoch}-{psnr:.4f}',
-                                          save_top_k=3,
-                                          verbose=True,
-                                          monitor='psnr',
-                                          mode='max')
-    callbacks.append(checkpoint_callback)
+    callbacks.append(plc.ModelSummary(max_depth=-1))
+    callbacks.append(plc.LearningRateMonitor(logging_interval='epoch'))
+    callbacks.append(plc.ModelCheckpoint(monitor='psnr',
+                                         filename='{epoch}-{psnr:.4f}',
+                                         save_top_k=3,
+                                         mode='max',
+                                         save_last=True))
     return callbacks
 
 
