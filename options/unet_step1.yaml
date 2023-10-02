@@ -5,6 +5,7 @@ global_settings:
   pretrain_path: None
   device: mps
   tb_dir: ./logs/tb
+  ckpt_dir: ./logs/weights
 
 data:
   dataset_name: RGB2RGB

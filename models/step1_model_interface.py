@@ -40,10 +40,10 @@ class MInterface(pl.LightningModule):
         y_hat = self.forward(x, params_batch)
         loss, loss_dict = self.loss_function(y_hat, y)
 
-        self.log('val_loss', loss, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('val_loss', loss)
         PSNR = PeakSignalNoiseRatio(data_range=1.0)
         psnr = PSNR(y_hat.detach().cpu(), y.detach().cpu())
-        self.log('psnr', psnr, on_step=False, on_epoch=True, prog_bar=True)
+        self.log('psnr', psnr)
 
         return {'val_loss': loss, 'psnr': psnr}
     
