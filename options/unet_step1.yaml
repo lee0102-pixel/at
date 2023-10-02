@@ -3,7 +3,6 @@ global_settings:
   step_flag: 1
   resume: false
   pretrain_path: None
-  device: mps
   tb_dir: ./logs/tb
   ckpt_dir: ./logs/weights
 

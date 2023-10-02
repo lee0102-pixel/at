@@ -26,7 +26,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     tools.parse_opt(args)
     # print(args)
-    device = torch.device(args.device)
+    device = torch.device('mps')
     # print(device)
     
     #### Logs ####

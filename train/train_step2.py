@@ -21,7 +21,7 @@ if __name__ == '__main__':
     parser.add_argument('--opt', type=str, default='./options/unet_step2.yaml')
     args = parser.parse_args()
     tools.parse_opt(args)
-    device = torch.device(args.device)
+    device = torch.device('mps')
     
     #### Logs ####
     now_time = time.strftime('%Y-%m-%d-%H-%M-%S', time.localtime(time.time()))
