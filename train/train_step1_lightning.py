@@ -6,9 +6,9 @@ sys.path.append(os.path.join(dir_name,'..'))
 import time
 import pytorch_lightning as pl
 from argparse import ArgumentParser
-from lightning.pytorch import Trainer
-from lightning.pytorch.loggers import TensorBoardLogger
-import lightning.pytorch.callbacks as plc
+from pytorch_lightning import Trainer
+from pytorch_lightning.loggers import TensorBoardLogger
+import pytorch_lightning.callbacks as plc
 
 from models import MInterface
 from dataset import DInterface
