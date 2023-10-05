@@ -31,7 +31,7 @@ class MInterface(pl.LightningModule):
         x, y, params_batch, _ = batch
         y_hat = self.forward(x, params_batch)
         loss, loss_dict = self.loss_function(y_hat, y)
-        self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True)
+        self.log('train_loss', loss, on_step=True, on_epoch=True, prog_bar=True, batch_size=self.args.batch_size)
 
         return loss
     
@@ -40,10 +40,10 @@ class MInterface(pl.LightningModule):
         x, y, params_batch, picname = batch
         y_hat = self.forward(x, params_batch)
         loss, loss_dict = self.loss_function(y_hat, y)
-        self.log('val_loss', loss)
+        self.log('val_loss', loss, batch_size=self.args.batch_size)
         PSNR = PeakSignalNoiseRatio(data_range=1.0)
         psnr = PSNR(y_hat.detach().cpu(), y.detach().cpu())
-        self.log('psnr', psnr)
+        self.log('psnr', psnr, batch_size=self.args.batch_size)
         self.logger.experiment.add_images(picname[0], torch.cat([x[0:1], y_hat[0:1], y[0:1]], dim=0), self.current_epoch)
 
         return {'val_loss': loss, 'psnr': psnr}
