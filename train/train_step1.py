@@ -170,7 +170,7 @@ if __name__ == '__main__':
                 'scheduler': scheduler.state_dict(),
             }
             torch.save(checkpoint, os.path.join(model_dir, 'best.pth'))
-        info = 'Ep: {}\tLoss {:.4f}\tPSNR {:.4f}\tBest_Ep {}\tBest_PSNR {:.4f}\tTime: {:.4f}\tLR {:.6f}'
+        info = 'Ep: {}\tLoss {:.6f}\tPSNR {:.4f}\tBest_Ep {}\tBest_PSNR {:.4f}\tTime: {:.2f}\tLR {:.6f}'
         print("------------------------------------------------------------------")
         print(info.format(epoch,
                           epoch_loss,
